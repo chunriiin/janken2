@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>Test Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+
+        #map,
+        #pano {
+            float: left;
+            height: 100%;
+            width: 50%;
+        }
+
+
+
+        /* 横スクロール */
+
+        .horizontal_scroll_wrap {
+            background-image: url(img/yellow0077.png);
+            background-repeat: no-repeat center center;
+            background-size: cover;
+            height: 240px;
+            overflow-y: hidden;
+            margin: 0 -10px;
+
+        }
+
+        .scroll_lst {
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            padding-bottom: 50px;
+            margin: 25px 0 0;
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+        .scroll_item {
+            margin-right: 10px;
+            display: inline-block;
+            width: 220px;
+            border-radius: 5px;
+
+
+            background: #fff;
+
+
+        }
+
+        .scroll_item:first-child {
+            margin-left: 10px;
+        }
+
+        .scroll_item_inr {
+            display: block;
+        }
+
+        .scroll_item_info {
+            white-space: normal;
+            padding: 8px;
+        }
+
+        .scroll_item_ttl {
+            font-size: 12px;
+            color: #484848;
+            line-height: 1.4;
+            margin-bottom: 0;
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+    <div id="map-box" style="height:70vh;flex-direction: column;">
+        <div id="map" style="width: 50%;"></div>
+        <div id="pano" style="width: 50%;"></div>
+    </div>
+
+
+    <div id="form-content" style="height:30%;">
+        <div id="card-contet"></div>
+
+        <!-- <div>行きたいところマップ</div> -->
+
+        <button id="modal-open" class="button-link" style="outline:none;
+                border: none;
+                cursor: pointer;
+                padding: 0;">
+            行ってみたいところを保存しよう
+        </button>
+
+        <!-- 横スクロール -->
+        <div class="horizontal_scroll_wrap">
+            <ul class="scroll_lst">
+
+                <li class="scroll_item">
+
+                    <div class="scroll_item_thum">
+                        <img src="img/sa.jpg" alt="" width="220" height="100" class="alignnone size-medium wp-image-986" />
+                    </div>
+                    <div class="scroll_item_info">
+                        <div class="">スペイン</div>
+                        <a href="" class="scroll_item_inr"></a>
+                        <h4 class="scroll_item_ttl">サクラダファミリア2026年完成予定</h4>
+                    </div>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+
+    </div>
+
+
+    <!-- モーダルオープン -->
+
+    <div id="modal-content">
+        <div id=regist style="margin: 0 auto;">
+
+
+
+
+        </div>
+
+        <div style="text-align:center;font-size: 20px;font-weight: bold;">マップ検索したところを カードに保存できます
+        </div>
+
+        <div style="display: flex">
+
+            <!-- カード作成コーナー -->
+            <div class="card1">
+                <img src="" id="image">
+                <input type="text" class="title1" style="width:260px;margin-left: 10px;">
+                <textarea type="text" class="content1" cols "30" rows="3" style="width:250px;margin-left: 10px;"></textarea>
+            </div>
+            <!-- 説明コーナー -->
+
+            <div style="width: 300px;margin: 20px;border-radius: 5px;">
+                <p style="">カードの作り方</p>
+
+                <p>1.イメージ画像を入れよう</p>
+                <p style="font-size: 5px;">ファイルを選択し、アップロードボタンを押すと画像が入ります。</p>
+
+                <p>2.タイトルを入れよう</p>
+                <p>3.ひとことメモを入れよう</p>
+            </div>
+
+        </div>
+
+
+        <div>
+            <textarea class="lat" style="display: none"></textarea>
+            <textarea class="lng" style="display: none"></textarea>
+
+
+        </div>
+        <!-- ファイルアップロード -->
+        <input type="file" id="file" />
+        <button id="upload" type="button">アップロード</button>
+
+
+        <button id="sendimg" style="border-radius: 50%;width: 100px;height: 100px;background-image: url(img/IMG_8768.jpg);
+        color: #fff;font-size: 20px;font-weight: bold;text-align: center;outline:none;margin-left:600px;">SAVE</button>
+
+        <div>
+            <a id="modal-close" class="button-link">閉じる</a>
+        </div>
+
+
+    </div>
+
+
+    <!-- スライド練習 -->
+
+
+    <style type="text/css">
+        #slide {
+            position: relative;
+        }
+
+        #slide img {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* モーダルのスタイリング */
+
+        #modal-content {
+            width: 50%;
+            margin: 1.5em auto 0;
+            padding: 10px 20px;
+            border: 2px solid #aaa;
+            background: #fff;
+            z-index: 2;
+            position: fixed;
+            display: none;
+            max-height: 600px;
+            overflow: auto;
+            border-radius: 30px;
+
+        }
+
+        #modal-open {
+            z-index: 2;
+            position: fixed;
+            left: 600px;
+            top: 200px;
+            border-radius: 50%;
+            width: 250px;
+            height: 250px;
+            background-image: url(img/IMG_8768.jpg);
+            color: #fff;
+            font-size: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+
+
+
+        }
+
+
+        .modal-p {
+            margin-top: 1em;
+        }
+
+        .modal-p:first-child {
+            margin-top: 0;
+        }
+
+
+
+        #modal-overlay {
+            z-index: 1;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+
+        //モーダルウィンドウを出現させるクリックイベント
+        $("#modal-open").click(function () {
+
+
+            //オーバーレイを出現させる
+            $("body").append('<div id="modal-overlay"></div>');
+            $("#modal-overlay").fadeIn("slow");
+
+            //コンテンツをフェードインする
+            $("#modal-content").fadeIn("slow");
+
+            //コンテンツをセンタリングする
+            centeringModalSyncer();
+
+            //[#modal-overlay]、または[#modal-close]をクリックしたら…
+            $("#modal-overlay,#modal-close").unbind().click(function () {
+
+                //[#modal-content]と[#modal-overlay]をフェードアウトした後に…
+                $("#modal-content,#modal-overlay").fadeOut("slow", function () {
+
+                    //[#modal-overlay]を削除する
+                    $('#modal-overlay').remove();
+
+                });
+
+            });
+
+        });
+
+
+
+        //リサイズされたら、センタリングをする関数[centeringModalSyncer()]を実行する
+        $(window).resize(centeringModalSyncer);
+
+        //センタリングを実行する関数
+        function centeringModalSyncer() {
+
+            //画面(ウィンドウ)の幅、高さを取得
+            var w = $(window).width();
+            var h = $(window).height();
+
+            // コンテンツ(#modal-content)の幅、高さを取得
+            // jQueryのバージョンによっては、引数[{margin:true}]を指定した時、不具合を起こします。
+            var cw = $("#modal-content").outerWidth();
+            var ch = $("#modal-content").outerHeight();
+
+            //センタリングを実行する
+            $("#modal-content").css({
+                "left": ((w - cw) / 2) + "px",
+                "top": ((h - ch) / 2) + "px"
+            });
+
+        }
+
+
+
+
+
+
+
+
+    </script>
+
+    <!-- ▼ 作成カードのデザイン ▼ -->
+    <style type="text/css">
+        .card1 {
+
+            width: 300px;
+            margin: 20px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 3px 6px #ccc;
+        }
+
+        #image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .title1 {
+            font-size: 150%;
+            margin: 10px;
+            color: #444;
+        }
+
+        .content1 {
+            padding: 10px;
+            color: #666;
+        }
+    </style>
+
+
+
+
+
+
+
+
+    <!-- マップとストリートビュー -->
+
+
+    <style>
+        #description {
+            font-family: Roboto;
+            font-size: 30px;
+            font-weight: 300;
+        }
+
+        #infowindow-content .title {
+            font-weight: bold;
+        }
+
+        #infowindow-content {
+            display: none;
+        }
+
+        #map #infowindow-content {
+            display: inline;
+        }
+
+        .pac-card {
+            margin: 10px 10px 0 0;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            background-color: pink;
+            font-family: Roboto;
+        }
+
+        #pac-container {
+            padding-bottom: 12px;
+            margin-right: 12px;
+        }
+
+        .pac-controls {
+            display: inline-block;
+            padding: 5px 11px;
+        }
+
+        .pac-controls label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        #pac-input {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 400px;
+        }
+
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
+
+        #title {
+            color: #fff;
+            background-color: #4d90fe;
+            font-size: 25px;
+            font-weight: 500;
+            padding: 6px 12px;
+        }
+
+        #target {
+            width: 345px;
+        }
+    </style>
+
+
+    <body>
+        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+        <div id="map"></div>
+        <div id="pano"></div>
+
+        <!-- 以下Firebase -->
+        <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCc5FIJ4J3gq_wi10QfAGFIrUjNDATRLj4&callback=initialize">
+        </script> -->
+        <script>
+
+            function initAutocomplete() {
+
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: -33.8688, lng: 151.2195 },
+                    zoom: 13,
+                    mapTypeId: 'roadmap'
+                });
+
+                // Create the search box and link it to the UI element.
+                var input = document.getElementById('pac-input');
+                var searchBox = new google.maps.places.SearchBox(input);
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                // Bias the SearchBox results towards current map's viewport.
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+
+                var markers = [];
+                // Listen for the event fired when the user selects a prediction and retrieve
+                // more details for that place.
+                searchBox.addListener('places_changed', function () {
+                    var places = searchBox.getPlaces();
+                    console.log(places)
+
+
+
+                    if (places.length == 0) {
+
+                    }
+
+
+
+
+                    // Clear out the old markers.
+                    markers.forEach(function (marker) {
+                        marker.setMap(null);
+                    });
+                    markers = [];
+
+                    // For each place, get the icon, name and location.
+                    var bounds = new google.maps.LatLngBounds();
+                    places.forEach(function (place) {
+                        if (!place.geometry) {
+                            console.log("Returned place contains no geometry");
+                            return;
+                        }
+
+                        setStreetView(map, place)
+
+                        var icon = {
+                            url: place.icon,
+                            size: new google.maps.Size(71, 71),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(17, 34),
+                            scaledSize: new google.maps.Size(25, 25)
+                        };
+
+                        // Create a marker for each place.
+                        markers.push(new google.maps.Marker({
+                            map: map,
+                            icon: icon,
+                            title: place.name,
+                            position: place.geometry.location
+
+
+
+                        }));
+
+                        console.log(markers);
+
+
+
+
+
+
+                        if (place.geometry.viewport) {
+                            // Only geocodes have viewport.
+                            bounds.union(place.geometry.viewport);
+                            console.log(bounds.union(place.geometry.viewport));
+                        } else {
+                            bounds.extend(place.geometry.location);
+                        }
+                    });
+                    map.fitBounds(bounds);
+
+
+                });
+
+
+
+
+
+                var fenway = { lat: -33.8688, lng: 151.2195 };
+                // var map = new google.maps.Map(document.getElementById('map'), {
+                //     center: fenway,
+                //     zoom: 14
+                // });
+                var panorama = new google.maps.StreetViewPanorama(
+                    document.getElementById('pano'), {
+                        position: fenway,
+                        pov: {
+                            heading: 34,
+                            pitch: 10
+                        }
+                    });
+                map.setStreetView(panorama);
+            }
+
+
+
+
+            // マップで表示した場所を取得してビューに反映させる
+            function setStreetView(map, place) {
+                var geo = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
+                $(".lat").text(geo.lat);
+                $(".lng").text(geo.lng);
+
+
+
+
+                var panorama = new google.maps.StreetViewPanorama(
+                    document.getElementById('pano'), {
+                        position: geo,
+                        pov: {
+                            heading: 34,
+                            pitch: 10
+                        }
+                    });
+                map.setStreetView(panorama);
+                return;
+
+            }
+
+
+
+            // ここからデータ保存（firebase）
+            var config = {
+                apiKey: "AIzaSyBDPsTJZlxFUQsDI2d7TcUsd44w5fP70H0",
+                authDomain: "mapapp-2a9b9.firebaseapp.com",
+                databaseURL: "https://mapapp-2a9b9.firebaseio.com",
+                projectId: "mapapp-2a9b9",
+                storageBucket: "mapapp-2a9b9.appspot.com",
+                messagingSenderId: "163203235969"
+            };
+            firebase.initializeApp(config);
+
+
+
+            var newPostRef = firebase.database().ref();
+
+            var dToday = new Date();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            $('#sendimg').on('click', function () {
+                newPostRef.push({
+
+                    userimg: $('#image').attr("src"),
+                    title: $(".title1").val(),
+                    text: $(".content1").val(),
+                    lat: $(".lat").val(),
+                    lng: $(".lng").val()
+
+
+                });
+                $('#image').val("");
+                $(".title1").val("");
+                $(".content1").val("");
+                $(".lat").val("");
+                $(".lng").val("");
+
+
+            });
+
+
+
+
+
+            newPostRef.on('child_added', function (data) {
+                var k = data.key;
+                var v = data.val();
+
+                console.log(k, v)
+
+
+
+                // スライドカードへ表示する
+                var str = "";
+
+                str += '<li class="scroll_item">';
+
+                str += '<div class="scroll_item_thum">';
+                str += '<img src="' + v.userimg + '" alt="" width="220" height="100" class="alignnone size-medium wp-image-986" >';
+                str += '</div>';
+                str += '<div class="scroll_item_info">';
+                str += '<div class="scroll_item_title" id="' + k + '">' + v.title + '</div>';
+                str += '<a href="" class="scroll_item_inr" >';
+                str += '<h4 class="scroll_item_ttl">' + v.text + '</h4>';
+                str += '</div>';
+                str += '</a>';
+                str += '</li>';
+
+
+
+                if (v.userimg !== "" && v.title !== "" && v.text) {
+
+                    $('.scroll_lst').append(str);
+                } else {
+                    alert("カードの記入が不十分です。")
+                }
+
+
+                $("#modal-content,#modal-overlay").fadeOut("slow", function () {
+
+                    //[#modal-overlay]を削除する
+                    $('#modal-overlay').remove();
+
+                });
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // ファイルアップロードを作成する
+            document.getElementById('upload').addEventListener('click', function () {
+                var files = document.getElementById('file').files;
+                var image = files[0];
+                // 「この場所にこういう名前でアップロードするよ」という定義
+                var ref = firebase.storage().ref().child(image.name);
+                ref.put(image).then(function (snapshot) {
+                    ref.getDownloadURL().then(function (url) {
+                        alert('アップロードしました');
+                        document.getElementById('image').src = url;
+                    })
+                });
+            });
+
+
+
+
+
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCc5FIJ4J3gq_wi10QfAGFIrUjNDATRLj4&libraries=places&callback=initAutocomplete"
+            async defer></script>
+    </body>
+
+
+
+
+</html>
